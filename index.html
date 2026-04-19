@@ -1,0 +1,1731 @@
+<!--
+================================================================================
+HOW TO CUSTOMIZE — Read this first!
+================================================================================
+
+PHOTO
+  Line ~330: <img src="assets/profile.jpg" ...>
+  → Drop your photo in an "assets/" folder next to index.html and name it profile.jpg
+    (or change the src attribute to match your filename).
+  → Same photo appears in BOTH the landing hero and the portfolio hero band.
+
+LANDING SCREEN (Interface 1)
+  Line ~340: [YOUR NAME]             → Replace with your full name
+  Line ~345: [YOUR TAGLINE]          → Short one-liner, e.g. "Product Manager & Builder"
+
+PORTFOLIO HERO (Interface 2)
+  Line ~380: [YOUR NAME]             → Your full name (heading)
+  Line ~385: [YOUR ROLE / TITLE]     → e.g. "Senior Product Manager"
+  Line ~390: [ABOUT ME PARAGRAPH]    → 2–4 sentences about yourself
+  Line ~400: your@email.com          → Your real email address
+
+WORK EXPERIENCE (Section 1)
+  Lines ~440–490: Three placeholder job entries.
+  Each entry has: Job Title, Company Name, Date Range, and bullet points.
+
+COMPANIES (Section 2)
+  Lines ~510–550: Four placeholder company cards.
+  Each card has: Logo circle color, Company Name, and one-line description.
+
+VOLUNTEERING & OTHER ACTIVITIES (Section 3)
+  Lines ~570–610: Two–three placeholder entries (same structure as Work Experience).
+
+SKILLS & CERTIFICATIONS (Section 4)
+  Lines ~630–660: Skill pill tags — add/remove <span class="skill-pill"> items.
+  Lines ~665–685: Certification entries — name, issuer, year.
+
+EDUCATION (Section 5)
+  Lines ~700–730: Two placeholder education entries.
+
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- PLACEHOLDER: Update the title tag with your name -->
+  <title>Matteo Cagnucci Vasquez — Portfolio</title>
+
+  <!-- Google Fonts: Poppins + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================================
+       RESET
+       ========================================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #1E293B;
+      background: #FFFFFF;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    ul { list-style: none; }
+
+    /* =========================================================================
+       CSS VARIABLES
+       ========================================================================= */
+    :root {
+      --white:        #FFFFFF;
+      --bg-light:     #F0F8FF;
+      --bg-lighter:   #E6F4FF;
+      --blue-light:   #A7D8F5;
+      --blue-mid:     #5CB3E8;
+      --blue-deep:    #2E86C1;
+      --text-primary: #1E293B;
+      --text-secondary: #475569;
+      --shadow-soft:  0 8px 24px rgba(46, 134, 193, 0.08);
+      --shadow-hover: 0 12px 32px rgba(46, 134, 193, 0.16);
+      --radius-card:  16px;
+      --radius-pill:  999px;
+      --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* =========================================================================
+       LAYOUT UTILITIES
+       ========================================================================= */
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* =========================================================================
+       CLOUD LAYER (shared, behind both screens)
+       ========================================================================= */
+    .cloud-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    /* Portfolio screen uses a dimmer cloud layer */
+    .cloud-layer--dim svg {
+      opacity: 0.25 !important;
+    }
+    .cloud {
+      position: absolute;
+      opacity: 0.65;
+      filter: drop-shadow(0 4px 12px rgba(46, 134, 193, 0.18));
+    }
+
+    /* Individual cloud animations */
+    @keyframes drift-slow   { from { transform: translateX(-220px); } to { transform: translateX(calc(100vw + 220px)); } }
+    @keyframes drift-medium { from { transform: translateX(-280px); } to { transform: translateX(calc(100vw + 280px)); } }
+    @keyframes drift-fast   { from { transform: translateX(-180px); } to { transform: translateX(calc(100vw + 180px)); } }
+
+    .cloud-1  { top:  8%;  animation: drift-slow   100s linear infinite; animation-delay: -20s; }
+    .cloud-2  { top: 18%;  animation: drift-medium  80s linear infinite; animation-delay: -45s; }
+    .cloud-3  { top: 34%;  animation: drift-slow    90s linear infinite; animation-delay: -10s; }
+    .cloud-4  { top: 52%;  animation: drift-fast    60s linear infinite; animation-delay: -30s; }
+    .cloud-5  { top: 66%;  animation: drift-medium  75s linear infinite; animation-delay: -60s; }
+    .cloud-6  { top: 78%;  animation: drift-slow   110s linear infinite; animation-delay: -5s;  }
+    .cloud-7  { top: 88%;  animation: drift-fast    55s linear infinite; animation-delay: -40s; }
+    .cloud-8  { top: 25%;  animation: drift-medium  85s linear infinite; animation-delay: -70s; }
+
+    /* Transition wipe clouds */
+    .wipe-cloud {
+      position: fixed;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+    }
+    .wipe-cloud.active { opacity: 0.9; }
+    @keyframes wipe-left  { from { transform: translateX(-400px) scale(0.8); } to { transform: translateX(calc(100vw + 400px)) scale(1.1); } }
+    @keyframes wipe-right { from { transform: translateX(calc(100vw + 400px)) scale(0.9); } to { transform: translateX(-400px) scale(1.1); } }
+    .wipe-cloud.wipe-l { animation: wipe-left  0.9s var(--ease) forwards; }
+    .wipe-cloud.wipe-r { animation: wipe-right 0.9s var(--ease) forwards; }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .cloud, .wipe-cloud { animation: none !important; }
+    }
+
+    /* =========================================================================
+       SCREEN WRAPPER — controls visibility & transition
+       ========================================================================= */
+    .screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+      will-change: opacity, transform;
+    }
+    /* Hidden state */
+    .screen--hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .screen--exit {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    .screen--enter {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* Portfolio screen is scrollable, not fixed */
+    #portfolio-screen {
+      position: absolute;
+      inset: 0;
+      display: block;
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    /* =========================================================================
+       LANDING SCREEN (Interface 1)
+       ========================================================================= */
+    #landing-screen {
+      flex-direction: column;
+      text-align: center;
+      background: transparent;
+      padding: 32px;
+    }
+
+    .landing-photo-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      border: 4px solid var(--blue-light);
+      box-shadow: var(--shadow-soft);
+      background: linear-gradient(135deg, #5CB3E8, #2E86C1);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .landing-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    /* Glowing ring pulse */
+    .landing-photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid var(--blue-mid);
+      opacity: 0.4;
+      animation: ring-pulse 3s ease-in-out infinite;
+    }
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(1);   opacity: 0.4; }
+      50%       { transform: scale(1.06); opacity: 0.1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .landing-photo-wrap::after { animation: none; }
+    }
+
+    .landing-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .landing-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 40px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--blue-deep);
+      color: var(--white);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 32px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 18px rgba(46, 134, 193, 0.35);
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s var(--ease);
+    }
+    .cta-btn:hover, .cta-btn:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(46, 134, 193, 0.45);
+      background: #2070a8;
+    }
+    .cta-btn:focus-visible {
+      outline: 3px solid var(--blue-mid);
+      outline-offset: 3px;
+    }
+    .cta-btn svg { flex-shrink: 0; }
+
+    /* =========================================================================
+       PORTFOLIO SCREEN (Interface 2)
+       ========================================================================= */
+    #portfolio-screen {
+      background: transparent;
+    }
+
+    /* Back button */
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid var(--blue-light);
+      color: var(--blue-deep);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+    .back-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .back-btn:hover, .back-btn:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-hover);
+    }
+    .back-btn:focus-visible {
+      outline: 3px solid var(--blue-mid);
+      outline-offset: 3px;
+    }
+
+    .portfolio-inner {
+      position: relative;
+      z-index: 2;
+      padding: 80px 0 60px;
+    }
+
+    /* — Hero Band — */
+    .hero-band {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      padding: 36px 40px;
+      margin-bottom: 36px;
+    }
+    .hero-photo-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--blue-light);
+      box-shadow: 0 4px 16px rgba(46, 134, 193, 0.15);
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #5CB3E8, #2E86C1);
+      overflow: hidden;
+    }
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .hero-text { flex: 1; min-width: 0; }
+    .hero-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .hero-age {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .hero-role {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--blue-deep);
+      margin-bottom: 12px;
+    }
+    .hero-about {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 18px;
+      max-width: 520px;
+    }
+    .social-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-lighter);
+      color: var(--blue-deep);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--blue-light);
+      transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+    }
+    .social-link:hover, .social-link:focus-visible {
+      background: var(--blue-light);
+      transform: translateY(-1px);
+    }
+    .social-link:focus-visible {
+      outline: 2px solid var(--blue-mid);
+      outline-offset: 2px;
+    }
+    /* When .social-link is a <button>, strip native button styling so it matches the anchor version */
+    button.social-link {
+      font-family: inherit;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* ——— Toast notification (shown after copying email) ——— */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--blue-deep);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 12px 32px rgba(46, 134, 193, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+      z-index: 9999;
+    }
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .toast { transition: opacity 0.15s linear; }
+    }
+
+    /* =========================================================================
+       ACCORDION SECTIONS
+       ========================================================================= */
+    .sections-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .accordion-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      border: 1.5px solid transparent;
+      transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+    .accordion-card:focus-within,
+    .accordion-card:hover {
+      border-color: var(--blue-light);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .accordion-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px;
+      background: transparent;
+      text-align: left;
+      transition: background 0.2s var(--ease);
+    }
+    .accordion-header:hover {
+      background: var(--bg-light);
+    }
+    .accordion-header:focus-visible {
+      outline: 3px solid var(--blue-mid);
+      outline-offset: -3px;
+      border-radius: var(--radius-card);
+    }
+
+    .accordion-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .accordion-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--bg-lighter);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .accordion-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .chevron {
+      width: 20px;
+      height: 20px;
+      color: var(--blue-mid);
+      transition: transform 0.3s var(--ease);
+      flex-shrink: 0;
+    }
+    .accordion-card.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.45s var(--ease), opacity 0.35s var(--ease);
+    }
+    .accordion-card.open .accordion-body {
+      max-height: 4000px;
+      opacity: 1;
+    }
+    .accordion-content {
+      padding: 4px 28px 28px;
+    }
+
+    /* — Timeline (Work Experience & Volunteering) — */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .timeline-entry {
+      display: flex;
+      gap: 20px;
+    }
+    .timeline-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue-deep);
+      border: 2px solid var(--blue-light);
+      flex-shrink: 0;
+    }
+    .timeline-connector {
+      flex: 1;
+      width: 2px;
+      background: var(--blue-light);
+      margin-top: 4px;
+      min-height: 24px;
+    }
+    .timeline-entry:last-child .timeline-connector { display: none; }
+
+    .timeline-body {}
+    .timeline-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+    .timeline-company {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--blue-deep);
+      margin-bottom: 2px;
+    }
+    .timeline-dates {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .timeline-bullets {
+      padding-left: 16px;
+    }
+    .timeline-bullets li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 4px;
+      list-style: disc;
+    }
+    .timeline-bullets li::marker { color: var(--blue-mid); }
+
+    /* — Companies Grid — */
+    .companies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .company-card {
+      background: var(--bg-light);
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+      border: 1.5px solid var(--bg-lighter);
+      transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+    .company-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    .company-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--white);
+    }
+    .company-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .company-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* — Skills & Certs — */
+    .skills-certs-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .skills-heading, .certs-heading {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--blue-deep);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 14px;
+    }
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .skill-pill {
+      background: var(--bg-lighter);
+      color: var(--blue-deep);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--blue-light);
+      white-space: nowrap;
+      transition: background 0.2s var(--ease), transform 0.15s var(--ease);
+    }
+    .skill-pill:hover {
+      background: var(--blue-light);
+      transform: translateY(-1px);
+    }
+
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .cert-entry {
+      background: var(--bg-light);
+      border-radius: 10px;
+      padding: 12px 14px;
+      border-left: 3px solid var(--blue-mid);
+    }
+    .cert-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .cert-meta {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* — Skill Categories — */
+    .skill-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .skill-category {
+      background: var(--bg-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--blue-mid);
+    }
+    .skill-category-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--blue-deep);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+    }
+    .skill-category p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .lang-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .lang-pill {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--white);
+      border: 1.5px solid var(--blue-light);
+      border-radius: 10px;
+      padding: 6px 14px;
+      min-width: 90px;
+    }
+    .lang-pill-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .lang-pill-level {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* =========================================================================
+       RESPONSIVE
+       ========================================================================= */
+    @media (max-width: 768px) {
+      .hero-band {
+        flex-direction: column;
+        text-align: center;
+        padding: 28px 24px;
+      }
+      .hero-about { max-width: none; }
+      .social-row { justify-content: center; }
+      .skills-certs-wrap { grid-template-columns: 1fr; }
+      .accordion-header { padding: 16px 20px; }
+      .accordion-content { padding: 4px 20px 22px; }
+
+      /* Show only 2-3 clouds on mobile for performance */
+      .cloud-4, .cloud-5, .cloud-6, .cloud-7, .cloud-8 { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .landing-photo { width: 120px; height: 120px; }
+      .back-btn { top: 12px; left: 12px; padding: 6px 14px; font-size: 0.8rem; }
+      .portfolio-inner { padding: 64px 0 48px; }
+      .hero-band { padding: 24px 18px; }
+      .container { padding: 0 16px; }
+      .accordion-title { font-size: 0.95rem; }
+      .companies-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* =========================================================================
+       FOCUS / ACCESSIBILITY
+       ========================================================================= */
+    :focus-visible {
+      outline: 3px solid var(--blue-mid);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* =========================================================================
+       UTILITY: Section divider
+       ========================================================================= */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue-light), transparent);
+      margin: 2px 28px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       CLOUD LAYERS
+       ========================================================================= -->
+
+  <!-- Landing clouds (full opacity) -->
+  <div class="cloud-layer" id="landing-clouds" aria-hidden="true">
+
+    <!-- Cloud shape A — wide puffy -->
+    <svg class="cloud cloud-1" width="220" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="110" cy="62" rx="105" ry="28" fill="#A7D8F5"/>
+      <ellipse cx="68"  cy="50" rx="48"  ry="38" fill="#A7D8F5"/>
+      <ellipse cx="128" cy="44" rx="56"  ry="42" fill="#A7D8F5"/>
+      <ellipse cx="175" cy="54" rx="40"  ry="32" fill="#A7D8F5"/>
+    </svg>
+
+    <!-- Cloud shape B — tall round -->
+    <svg class="cloud cloud-2" width="180" height="80" viewBox="0 0 180 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="90"  cy="56" rx="85"  ry="24" fill="#C8E9F8"/>
+      <ellipse cx="52"  cy="44" rx="38"  ry="32" fill="#C8E9F8"/>
+      <ellipse cx="102" cy="38" rx="46"  ry="36" fill="#C8E9F8"/>
+      <ellipse cx="148" cy="48" rx="34"  ry="26" fill="#C8E9F8"/>
+    </svg>
+
+    <!-- Cloud shape C — small compact -->
+    <svg class="cloud cloud-3" width="150" height="64" viewBox="0 0 150 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="75"  cy="46" rx="70"  ry="18" fill="#A7D8F5"/>
+      <ellipse cx="46"  cy="36" rx="34"  ry="28" fill="#A7D8F5"/>
+      <ellipse cx="96"  cy="30" rx="40"  ry="30" fill="#A7D8F5"/>
+      <ellipse cx="130" cy="40" rx="26"  ry="20" fill="#A7D8F5"/>
+    </svg>
+
+    <!-- Cloud shape D — wide flat -->
+    <svg class="cloud cloud-4" width="260" height="70" viewBox="0 0 260 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="50" rx="125" ry="20" fill="#C8E9F8"/>
+      <ellipse cx="70"  cy="38" rx="54"  ry="30" fill="#C8E9F8"/>
+      <ellipse cx="150" cy="32" rx="64"  ry="32" fill="#C8E9F8"/>
+      <ellipse cx="210" cy="40" rx="46"  ry="26" fill="#C8E9F8"/>
+    </svg>
+
+    <!-- Cloud shape A (reuse) – far background small -->
+    <svg class="cloud cloud-5" width="130" height="56" viewBox="0 0 130 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="65"  cy="40" rx="60"  ry="16" fill="#D8EFF9"/>
+      <ellipse cx="38"  cy="32" rx="28"  ry="24" fill="#D8EFF9"/>
+      <ellipse cx="80"  cy="26" rx="36"  ry="26" fill="#D8EFF9"/>
+      <ellipse cx="112" cy="34" rx="24"  ry="18" fill="#D8EFF9"/>
+    </svg>
+
+    <svg class="cloud cloud-6" width="200" height="76" viewBox="0 0 200 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="54" rx="94"  ry="22" fill="#A7D8F5"/>
+      <ellipse cx="58"  cy="42" rx="44"  ry="34" fill="#A7D8F5"/>
+      <ellipse cx="116" cy="36" rx="52"  ry="38" fill="#A7D8F5"/>
+      <ellipse cx="164" cy="46" rx="38"  ry="28" fill="#A7D8F5"/>
+    </svg>
+
+    <svg class="cloud cloud-7" width="170" height="66" viewBox="0 0 170 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="85"  cy="48" rx="80"  ry="18" fill="#C8E9F8"/>
+      <ellipse cx="50"  cy="38" rx="36"  ry="28" fill="#C8E9F8"/>
+      <ellipse cx="100" cy="32" rx="44"  ry="32" fill="#C8E9F8"/>
+      <ellipse cx="142" cy="42" rx="30"  ry="22" fill="#C8E9F8"/>
+    </svg>
+
+    <svg class="cloud cloud-8" width="240" height="86" viewBox="0 0 240 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="120" cy="62" rx="114" ry="24" fill="#D8EFF9"/>
+      <ellipse cx="72"  cy="50" rx="50"  ry="40" fill="#D8EFF9"/>
+      <ellipse cx="138" cy="42" rx="60"  ry="44" fill="#D8EFF9"/>
+      <ellipse cx="192" cy="54" rx="44"  ry="30" fill="#D8EFF9"/>
+    </svg>
+
+  </div>
+
+  <!-- Portfolio clouds (dim — injected by JS to keep DOM clean) -->
+  <div class="cloud-layer cloud-layer--dim" id="portfolio-clouds" aria-hidden="true" style="display:none;">
+    <!-- Cloned subset inserted by JS -->
+  </div>
+
+  <!-- Wipe transition clouds -->
+  <div class="wipe-cloud" id="wipe1" aria-hidden="true" style="top:10%;">
+    <svg width="320" height="120" viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="160" cy="86" rx="154" ry="34" fill="#A7D8F5"/>
+      <ellipse cx="90"  cy="68" rx="70"  ry="56" fill="#A7D8F5"/>
+      <ellipse cx="192" cy="58" rx="82"  ry="60" fill="#A7D8F5"/>
+      <ellipse cx="272" cy="72" rx="56"  ry="44" fill="#A7D8F5"/>
+    </svg>
+  </div>
+  <div class="wipe-cloud" id="wipe2" aria-hidden="true" style="top:45%;">
+    <svg width="280" height="104" viewBox="0 0 280 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="140" cy="74" rx="134" ry="30" fill="#C8E9F8"/>
+      <ellipse cx="82"  cy="58" rx="62"  ry="50" fill="#C8E9F8"/>
+      <ellipse cx="168" cy="48" rx="74"  ry="54" fill="#C8E9F8"/>
+      <ellipse cx="238" cy="64" rx="48"  ry="38" fill="#C8E9F8"/>
+    </svg>
+  </div>
+  <div class="wipe-cloud" id="wipe3" aria-hidden="true" style="top:72%;">
+    <svg width="350" height="130" viewBox="0 0 350 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="175" cy="96" rx="168" ry="34" fill="#A7D8F5"/>
+      <ellipse cx="100" cy="76" rx="76"  ry="62" fill="#A7D8F5"/>
+      <ellipse cx="210" cy="64" rx="90"  ry="66" fill="#A7D8F5"/>
+      <ellipse cx="298" cy="80" rx="60"  ry="48" fill="#A7D8F5"/>
+    </svg>
+  </div>
+
+  <!-- =========================================================================
+       INTERFACE 1 — LANDING SCREEN
+       ========================================================================= -->
+  <main>
+    <section
+      id="landing-screen"
+      class="screen"
+      aria-label="Landing — introduction"
+    >
+      <!-- PLACEHOLDER: Replace assets/profile.jpg with your real photo path -->
+      <div class="landing-photo-wrap">
+        <img
+          class="landing-photo"
+          src="assets/profile.jpg"
+          alt="Profile photo of Matteo Cagnucci Vasquez"
+          onerror="this.style.display='none';"
+        />
+      </div>
+
+      <h1 class="landing-name">Matteo Cagnucci Vasquez</h1>
+
+      <p class="landing-tagline">Builder at the intersection of technology, business, and automation.</p>
+
+      <button
+        class="cta-btn"
+        id="cta-btn"
+        aria-label="Discover who I am — open portfolio"
+      >
+        Want to discover who I am?
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </section>
+
+    <!-- =========================================================================
+         INTERFACE 2 — PORTFOLIO SCREEN
+         ========================================================================= -->
+    <section
+      id="portfolio-screen"
+      class="screen screen--hidden screen--enter"
+      aria-label="Portfolio"
+    >
+      <!-- Back button (fixed top-left) -->
+      <button class="back-btn" id="back-btn" aria-label="Go back to landing screen">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+
+      <div class="portfolio-inner">
+        <div class="container">
+
+          <!-- — HERO BAND — -->
+          <header class="hero-band">
+            <div class="hero-photo-wrap">
+              <img
+                class="hero-photo"
+                src="assets/profile.jpg"
+                alt="Profile photo of Matteo Cagnucci Vasquez"
+                onerror="this.style.display='none';"
+              />
+            </div>
+            <div class="hero-text">
+              <h2 class="hero-name">Matteo Cagnucci Vasquez</h2>
+              <p class="hero-age">19 years old</p>
+
+              <p class="hero-role">Automation &amp; Digital Business Builder</p>
+
+              <p class="hero-about">
+                Curious, driven, and resilient, I am motivated by growth, problem-solving, and continuous self-improvement. I have a strong interest in technology, business, psychology, and entrepreneurship, and I enjoy taking on new challenges that push me beyond my comfort zone. I am energized by learning through experience, working with clients, and collaborating with people from diverse cultures and backgrounds. I value teamwork, my professors and mates, encourage others to build on their strengths, and aim to create environments where people feel heard, valued, and motivated to achieve strong results together.
+              </p>
+
+              <nav class="social-row" aria-label="Social and contact links">
+                <!-- Email contact — clicking copies the address to the clipboard and shows a confirmation toast -->
+                <button
+                  type="button"
+                  class="social-link"
+                  data-copy-email="matteo.cagnucci@gmail.com"
+                  aria-label="Copy email address matteo.cagnucci@gmail.com to clipboard"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  Email
+                </button>
+
+              </nav>
+            </div>
+          </header>
+          <!-- END HERO BAND -->
+
+          <!-- — ACCORDION SECTIONS — -->
+          <main class="sections-stack">
+
+            <!-- ================================================================
+                 SECTION 1: WORK EXPERIENCE
+                 ================================================================ -->
+            <article class="accordion-card" id="section-work">
+              <button
+                class="accordion-header"
+                aria-expanded="false"
+                aria-controls="body-work"
+                id="header-work"
+              >
+                <div class="accordion-title-wrap">
+                  <div class="accordion-icon">
+                    <!-- Briefcase icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E86C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/></svg>
+                  </div>
+                  <span class="accordion-title">Work Experience</span>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-body" id="body-work" role="region" aria-labelledby="header-work">
+                <div class="accordion-content">
+                  <ul class="timeline">
+
+                    <!-- HALA -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Automation &amp; Business Operations</p>
+                        <p class="timeline-company">HALA · Rome, Italy</p>
+                        <p class="timeline-dates">February 2026 – Ongoing</p>
+                        <ul class="timeline-bullets">
+                          <li>Contributing to automation projects at HALA, a startup focused on Digital Product Passports (DPPs), helping brands improve authenticity, traceability, and digital transparency.</li>
+                          <li>Working directly with the Chief Financial Officer on initiatives related to lead generation, automated outreach, and data analytics.</li>
+                          <li>Built workflows to identify potential leads, generate personalized messages at scale, and streamline internal business processes.</li>
+                          <li>Supporting a more efficient and data-driven operating structure through automation, problem-solving, and analytical thinking.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Kireya -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">E-Commerce Founder &amp; Operator</p>
+                        <p class="timeline-company">Kireya · Colombia</p>
+                        <p class="timeline-dates">Ongoing</p>
+                        <ul class="timeline-bullets">
+                          <li>Founded and operate Kireya, a cosmetics e-commerce business built around imported products and selected dropshipping items.</li>
+                          <li>Manage the business end-to-end, including website design and development, visual content creation, and the overall digital customer experience.</li>
+                          <li>Produce images and video content for the website, Meta Ads campaigns, and organic social media, combining branding, creativity, and conversion-focused execution.</li>
+                          <li>Lead product research, customer communication, market analysis, audience segmentation, advertising strategy, and sales optimization.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Vivetbar -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Dropshipping Operator</p>
+                        <p class="timeline-company">Vivetbar · Colombia</p>
+                        <p class="timeline-dates">Ongoing</p>
+                        <ul class="timeline-bullets">
+                          <li>Operate Vivetbar, a traditional dropshipping business focused on selling trending products with a performance-driven commercial approach.</li>
+                          <li>Manage all core business functions independently: product selection, website setup, content creation, advertising, customer communication, and sales execution.</li>
+                          <li>Focus on individual product performance rather than long-term brand building, testing offers and creatives to identify high-converting opportunities.</li>
+                          <li>Oversee the full commercial process from market research and ad execution to customer interaction and optimization of sales results.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- AVIACOL -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Campaign Video Editor (Freelance)</p>
+                        <p class="timeline-company">AVIACOL · Bucaramanga, Colombia</p>
+                        <p class="timeline-dates">May 2025 – Sep 2025</p>
+                        <ul class="timeline-bullets">
+                          <li>Worked as a freelance video editor for AVIACOL, an aviation school, supporting the creation of promotional content for social media campaigns.</li>
+                          <li>Coordinated and edited marketing videos designed to strengthen the school's digital presence and communicate its value proposition more effectively.</li>
+                          <li>Contributed to campaign execution through creative editing, visual storytelling, and content adapted for online audiences.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Vuelo Libre Colombia -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Marketing Coordinator</p>
+                        <p class="timeline-company">Vuelo Libre Colombia (Advance Colombia) · Piedecuesta, Colombia</p>
+                        <p class="timeline-dates">Jan 2025 – Sep 2025</p>
+                        <ul class="timeline-bullets">
+                          <li>Supported marketing initiatives for a local adventure sports entrepreneurship, helping strengthen its digital presence and audience engagement.</li>
+                          <li>Managed social media content and contributed to the communication of the brand's activities, services, and overall image.</li>
+                          <li>Helped promote the business through consistent content execution, creative coordination, and audience-focused communication.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Best English Institute -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Campaign Video Editor</p>
+                        <p class="timeline-company">Best English Institute · Bucaramanga, Colombia</p>
+                        <p class="timeline-dates">May 2025 – Sep 2025</p>
+                        <ul class="timeline-bullets">
+                          <li>Edited promotional videos for social media campaigns aimed at increasing course visibility and supporting sales efforts.</li>
+                          <li>Collaborated with internal teams to produce engaging content that helped the institute communicate its offerings in a more dynamic and competitive way.</li>
+                          <li>Contributed to the promotion of an English school focused primarily on children, adapting content to fit the brand's audience and objectives.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Summer Café Worker -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Service Support</p>
+                        <p class="timeline-company">Summer Café Worker – Roma · Bucaramanga, Colombia</p>
+                        <p class="timeline-dates">Jun 2015 – Aug 2015 &amp; Jun 2016 – Aug 2016</p>
+                        <ul class="timeline-bullets">
+                          <li>Supported daily operations during summer periods by assisting with dishwashing and serving tasks.</li>
+                          <li>Gained early exposure to responsibility, discipline, and the value of contributing through hands-on work from a young age.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Restaurant Worker – Vicoletto -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Dishwashing Support</p>
+                        <p class="timeline-company">Restaurant Worker – Vicoletto · Bucaramanga, Colombia</p>
+                        <p class="timeline-dates">Jun 2014 – Aug 2014 &amp; Jun 2015 – Aug 2015</p>
+                        <ul class="timeline-bullets">
+                          <li>Worked during summer periods supporting restaurant operations through dishwashing and back-of-house assistance.</li>
+                          <li>Reflected an early willingness to take on responsibility, contribute through practical work, and embrace new challenges from a young age.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <!-- ================================================================
+                 SECTION 2: COMPANIES
+                 ================================================================ -->
+            <article class="accordion-card" id="section-companies">
+              <button
+                class="accordion-header"
+                aria-expanded="false"
+                aria-controls="body-companies"
+                id="header-companies"
+              >
+                <div class="accordion-title-wrap">
+                  <div class="accordion-icon">
+                    <!-- Building icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E86C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <span class="accordion-title">Companies</span>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-body" id="body-companies" role="region" aria-labelledby="header-companies">
+                <div class="accordion-content">
+                  <div class="companies-grid">
+
+                    <!-- HALA -->
+                    <a class="company-card" href="https://www.hala.wtf/" target="_blank" rel="noopener noreferrer">
+                      <div class="company-logo" style="background: linear-gradient(135deg, #5CB3E8, #2E86C1);" aria-hidden="true">HA</div>
+                      <p class="company-name">HALA</p>
+                      <p class="company-desc">Startup focused on Digital Product Passports — automation &amp; business operations.</p>
+                    </a>
+
+                    <!-- Kireya -->
+                    <a class="company-card" href="https://kireya.co/" target="_blank" rel="noopener noreferrer">
+                      <div class="company-logo" style="background: linear-gradient(135deg, #A7D8F5, #5CB3E8);" aria-hidden="true">KI</div>
+                      <p class="company-name">Kireya</p>
+                      <p class="company-desc">Cosmetics e-commerce brand built around imported products and dropshipping.</p>
+                    </a>
+
+                    <!-- Vivetbar -->
+                    <a class="company-card" href="https://vivetbar.com/collections/all" target="_blank" rel="noopener noreferrer">
+                      <div class="company-logo" style="background: linear-gradient(135deg, #2E86C1, #1a5a84);" aria-hidden="true">VV</div>
+                      <p class="company-name">Vivetbar</p>
+                      <p class="company-desc">Performance-driven dropshipping business selling trending products.</p>
+                    </a>
+
+                    <!-- AVIACOL -->
+                    <a class="company-card" href="https://www.instagram.com/aviacolescuela/" target="_blank" rel="noopener noreferrer">
+                      <div class="company-logo" style="background: linear-gradient(135deg, #5CB3E8, #A7D8F5);" aria-hidden="true">AV</div>
+                      <p class="company-name">AVIACOL</p>
+                      <p class="company-desc">Aviation school — freelance video editing for social media campaigns.</p>
+                    </a>
+
+                    <!-- Vuelo Libre Colombia -->
+                    <a class="company-card" href="https://www.instagram.com/advance_colombia/" target="_blank" rel="noopener noreferrer">
+                      <div class="company-logo" style="background: linear-gradient(135deg, #A7D8F5, #2E86C1);" aria-hidden="true">VL</div>
+                      <p class="company-name">Vuelo Libre Colombia</p>
+                      <p class="company-desc">Adventure sports entrepreneurship — marketing coordination &amp; digital presence.</p>
+                    </a>
+
+                    <!-- Best English Institute -->
+                    <a class="company-card" href="https://www.instagram.com/bestenglishinstitutebga/" target="_blank" rel="noopener noreferrer">
+                      <div class="company-logo" style="background: linear-gradient(135deg, #2E86C1, #5CB3E8);" aria-hidden="true">BE</div>
+                      <p class="company-name">Best English Institute</p>
+                      <p class="company-desc">English school — campaign video editing for social media and course promotion.</p>
+                    </a>
+
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- ================================================================
+                 SECTION 3: VOLUNTEERING & OTHER ACTIVITIES
+                 ================================================================ -->
+            <article class="accordion-card" id="section-volunteering">
+              <button
+                class="accordion-header"
+                aria-expanded="false"
+                aria-controls="body-volunteering"
+                id="header-volunteering"
+              >
+                <div class="accordion-title-wrap">
+                  <div class="accordion-icon">
+                    <!-- Heart icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E86C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </div>
+                  <span class="accordion-title">Initiatives, Leadership &amp; Volunteering</span>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-body" id="body-volunteering" role="region" aria-labelledby="header-volunteering">
+                <div class="accordion-content">
+                  <ul class="timeline">
+
+                    <!-- Independent Programming & AI Projects -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Independent Programming &amp; AI Projects</p>
+                        <p class="timeline-company">Personal Projects &amp; Self-Directed Learning</p>
+                        <p class="timeline-dates">Ongoing</p>
+                        <ul class="timeline-bullets">
+                          <li>Driven by a strong interest in programming and artificial intelligence, I explore technical areas beyond university coursework by building practical projects independently.</li>
+                          <li>Regularly challenge myself by creating tools and automations designed to solve real problems or make everyday processes more efficient.</li>
+                          <li>Built a web application that converts PDF, DOCX, TXT, and other file formats into mind maps: <a href="https://mindmapper-production-668a.up.railway.app/" target="_blank" rel="noopener noreferrer" style="color:var(--blue-deep);text-decoration:underline;">mindmapper-production-668a.up.railway.app</a></li>
+                          <li>Built automations in n8n, including a system that sends a nightly email reminder to plan tasks for the following day and better organize the calendar.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- TikTok Content Creator -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Content Creation &amp; Digital Storytelling</p>
+                        <p class="timeline-company">TikTok – "mrcacomacaco" · Colombia</p>
+                        <p class="timeline-dates">Jun 2020 – Apr 2025</p>
+                        <ul class="timeline-bullets">
+                          <li>Built and managed a TikTok account that grew to more than 15,000 followers and generated millions of views through viral content focused on humor and storytelling.</li>
+                          <li>Developed skills in audience engagement, creative communication, trend analysis, and content performance through consistent experimentation and execution.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Olympic U20 -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Soccer Team Member</p>
+                        <p class="timeline-company">Olympic U20 · Floridablanca, Colombia</p>
+                        <p class="timeline-dates">Apr 2024 – Sep 2024</p>
+                        <ul class="timeline-bullets">
+                          <li>Competed as a member of Olympic U20 in a semi-professional league environment and in National Tournament B.</li>
+                          <li>Strengthened discipline, resilience, teamwork, and the ability to perform under pressure in a competitive athletic setting.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- MUN -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Model United Nations (MUN) Delegate</p>
+                        <p class="timeline-company">School Representative · Guyana &amp; Venezuela</p>
+                        <p class="timeline-dates">Apr 2022 &amp; Apr 2023</p>
+                        <ul class="timeline-bullets">
+                          <li>Represented my school at two MUN conferences, debating topics related to human rights, sovereignty, and international affairs.</li>
+                          <li>Developed public speaking, argumentation, diplomacy, and the ability to communicate ideas clearly in high-pressure debate settings.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Student Council -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Student Council Representative</p>
+                        <p class="timeline-company">New Cambridge School · Floridablanca, Colombia</p>
+                        <p class="timeline-dates">Aug 2022 – Jun 2023</p>
+                        <ul class="timeline-bullets">
+                          <li>Represented high school students as a liaison between the student body and school administration.</li>
+                          <li>Helped communicate student concerns, support dialogue, and contribute to a more connected and responsive school environment.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Christmas Giving Initiative -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Annual Christmas Giving Initiative</p>
+                        <p class="timeline-company">Community Support Volunteer · Bucaramanga, Colombia</p>
+                        <p class="timeline-dates">Dec 2016 – Present</p>
+                        <ul class="timeline-bullets">
+                          <li>Every December since 2016, my mother and I have visited schools in underprivileged neighborhoods, in collaboration with the Divino Salvador Foundation, to donate food, clothes, and toys to children in need.</li>
+                          <li>This initiative reflects a long-term commitment to service and to creating moments of dignity, joy, and support for children during the holiday season.</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <!-- ================================================================
+                 SECTION 4: SKILLS & CERTIFICATIONS
+                 ================================================================ -->
+            <article class="accordion-card" id="section-skills">
+              <button
+                class="accordion-header"
+                aria-expanded="false"
+                aria-controls="body-skills"
+                id="header-skills"
+              >
+                <div class="accordion-title-wrap">
+                  <div class="accordion-icon">
+                    <!-- Star/Award icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E86C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <span class="accordion-title">Skills &amp; Certifications</span>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-body" id="body-skills" role="region" aria-labelledby="header-skills">
+                <div class="accordion-content">
+                  <div class="skill-categories">
+
+                    <!-- Languages -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">Languages</p>
+                      <div class="lang-pills">
+                        <div class="lang-pill"><span class="lang-pill-name">Spanish</span><span class="lang-pill-level">Native</span></div>
+                        <div class="lang-pill"><span class="lang-pill-name">Italian</span><span class="lang-pill-level">Native (oral); limited writing</span></div>
+                        <div class="lang-pill"><span class="lang-pill-name">English</span><span class="lang-pill-level">Upper Intermediate – B2</span></div>
+                        <div class="lang-pill"><span class="lang-pill-name">Japanese</span><span class="lang-pill-level">Beginner – A2</span></div>
+                      </div>
+                    </div>
+
+                    <!-- Programming & Technical -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">Programming &amp; Technical Skills</p>
+                      <div class="skill-pills">
+                        <span class="skill-pill">Python</span>
+                        <span class="skill-pill">MATLAB</span>
+                        <span class="skill-pill">Algorithms</span>
+                        <span class="skill-pill">Programming Fundamentals</span>
+                        <span class="skill-pill">Basic Web Development</span>
+                      </div>
+                    </div>
+
+                    <!-- AI & Automation -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">AI &amp; Automation</p>
+                      <p>Experience developing solutions using OpenAI API and Anthropic API, as well as workflow automation with n8n and Python scripts. Strong interest in practical AI applications, system integration, and process optimization.</p>
+                    </div>
+
+                    <!-- Marketing & Growth -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">Marketing &amp; Growth</p>
+                      <p>Experience in social media management, Meta Ads, organic content strategy, creative development, audience targeting, market research, and performance-driven digital marketing.</p>
+                    </div>
+
+                    <!-- Creative & Digital Tools -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">Creative &amp; Digital Tools</p>
+                      <p>Advanced user of Mac and Windows environments. Skilled in video and image editing with Adobe Premiere Pro and Adobe Photoshop, with intermediate knowledge of Adobe After Effects and Adobe Audition. Experienced in content creation for websites, advertising, and social media platforms.</p>
+                    </div>
+
+                    <!-- Additional Learning -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">Additional Learning</p>
+                      <p>Self-directed learning in e-commerce, computer science, and digital tools through online resources, including Harvard's CS50: Introduction to Computer Science and practical project-based learning.</p>
+                    </div>
+
+                    <!-- International Learning -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">International Learning Experience</p>
+                      <p>Completed an intensive English course at Global Village during a four-month stay in Canada.</p>
+                    </div>
+
+                    <!-- Personal Interests -->
+                    <div class="skill-category">
+                      <p class="skill-category-title">Personal Interests</p>
+                      <p>Music composition, recording, and editing; reading across business, psychology, technology, and self-development, often in multiple languages.</p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- ================================================================
+                 SECTION 5: EDUCATION
+                 ================================================================ -->
+            <article class="accordion-card" id="section-education">
+              <button
+                class="accordion-header"
+                aria-expanded="false"
+                aria-controls="body-education"
+                id="header-education"
+              >
+                <div class="accordion-title-wrap">
+                  <div class="accordion-icon">
+                    <!-- Graduation cap icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E86C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                  </div>
+                  <span class="accordion-title">Education</span>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion-body" id="body-education" role="region" aria-labelledby="header-education">
+                <div class="accordion-content">
+                  <ul class="timeline">
+
+                    <!-- LUISS -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Management &amp; AI</p>
+                        <p class="timeline-company">LUISS Guido Carli University · Rome, Italy</p>
+                        <p class="timeline-dates">Sep 2025 – Ongoing</p>
+                        <ul class="timeline-bullets">
+                          <li>Average Grade: 28/30</li>
+                          <li>Key coursework: Financial Accounting, Mathematics, Microeconomics, Digital Business, Introduction to Programming, Algorithms</li>
+                        </ul>
+                      </div>
+                    </li>
+
+                    <!-- Colombian Baccalaureate -->
+                    <li class="timeline-entry">
+                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
+                      <div class="timeline-body">
+                        <p class="timeline-title">Colombian Baccalaureate (with IB courses)</p>
+                        <p class="timeline-company">New Cambridge School · Floridablanca, Colombia</p>
+                        <p class="timeline-dates">Graduated: Jun 2024</p>
+                      </div>
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+          </main>
+          <!-- END ACCORDION SECTIONS -->
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       JAVASCRIPT
+       ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      // -----------------------------------------------------------------------
+      // DOM refs
+      // -----------------------------------------------------------------------
+      const landingScreen   = document.getElementById('landing-screen');
+      const portfolioScreen = document.getElementById('portfolio-screen');
+      const ctaBtn          = document.getElementById('cta-btn');
+      const backBtn         = document.getElementById('back-btn');
+      const landingClouds   = document.getElementById('landing-clouds');
+      const portfolioClouds = document.getElementById('portfolio-clouds');
+
+      const wipe1 = document.getElementById('wipe1');
+      const wipe2 = document.getElementById('wipe2');
+      const wipe3 = document.getElementById('wipe3');
+
+      // -----------------------------------------------------------------------
+      // Clone a subset of clouds into the dim portfolio cloud layer
+      // -----------------------------------------------------------------------
+      (function seedPortfolioClouds() {
+        const sourceNodes = landingClouds.querySelectorAll('.cloud');
+        // Use only clouds 1, 2, 3 (indices 0, 1, 2) for the portfolio layer
+        [0, 1, 2].forEach(i => {
+          if (sourceNodes[i]) {
+            const clone = sourceNodes[i].cloneNode(true);
+            portfolioClouds.appendChild(clone);
+          }
+        });
+      })();
+
+      // -----------------------------------------------------------------------
+      // TRANSITION: Landing → Portfolio
+      // -----------------------------------------------------------------------
+      function goToPortfolio() {
+        // Step 1 — start wipe clouds
+        triggerWipe('forward');
+
+        // Step 2 — fade out landing
+        landingScreen.classList.add('screen--exit');
+
+        // Step 3 — after short delay, show portfolio with slide-up
+        setTimeout(() => {
+          landingScreen.classList.add('screen--hidden');
+          landingScreen.classList.remove('screen--exit');
+
+          // Switch cloud layers
+          landingClouds.style.display = 'none';
+          portfolioClouds.style.display = 'block';
+
+          portfolioScreen.classList.remove('screen--hidden');
+          // Force a reflow so the transition triggers
+          void portfolioScreen.offsetWidth;
+          portfolioScreen.classList.remove('screen--enter');
+
+          backBtn.classList.add('visible');
+          portfolioScreen.scrollTop = 0;
+        }, 420);
+      }
+
+      // -----------------------------------------------------------------------
+      // TRANSITION: Portfolio → Landing
+      // -----------------------------------------------------------------------
+      function goToLanding() {
+        backBtn.classList.remove('visible');
+        triggerWipe('backward');
+
+        // Prepare portfolio to exit (mirror of landing exit)
+        portfolioScreen.style.transition = 'opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1)';
+        portfolioScreen.style.opacity    = '0';
+        portfolioScreen.style.transform  = 'translateY(20px)';
+
+        setTimeout(() => {
+          portfolioScreen.classList.add('screen--hidden');
+          portfolioScreen.classList.add('screen--enter');
+          portfolioScreen.style.opacity   = '';
+          portfolioScreen.style.transform = '';
+          portfolioScreen.style.transition = '';
+
+          // Switch cloud layers
+          portfolioClouds.style.display = 'none';
+          landingClouds.style.display   = 'block';
+
+          landingScreen.classList.remove('screen--hidden');
+          landingScreen.classList.remove('screen--exit');
+          // Ensure landing is fully visible
+          void landingScreen.offsetWidth;
+          landingScreen.style.opacity = '';
+        }, 420);
+      }
+
+      // -----------------------------------------------------------------------
+      // Wipe animation helper
+      // -----------------------------------------------------------------------
+      function triggerWipe(direction) {
+        const wipes = [wipe1, wipe2, wipe3];
+        const cls   = direction === 'forward' ? 'wipe-l' : 'wipe-r';
+
+        wipes.forEach((w, i) => {
+          setTimeout(() => {
+            w.classList.remove('wipe-l', 'wipe-r', 'active');
+            void w.offsetWidth; // force reflow
+            w.classList.add('active', cls);
+            // Clean up after animation
+            setTimeout(() => w.classList.remove('active', cls), 1100);
+          }, i * 80);
+        });
+      }
+
+      // -----------------------------------------------------------------------
+      // Event listeners: CTA and Back
+      // -----------------------------------------------------------------------
+      ctaBtn.addEventListener('click', goToPortfolio);
+      backBtn.addEventListener('click', goToLanding);
+
+      // Keyboard support for Back btn (handled natively since it's a <button>)
+      // Extra: close any open accordion when pressing Escape
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !portfolioScreen.classList.contains('screen--hidden')) {
+          goToLanding();
+        }
+      });
+
+      // -----------------------------------------------------------------------
+      // ACCORDION logic
+      // -----------------------------------------------------------------------
+      const accordionCards = document.querySelectorAll('.accordion-card');
+
+      accordionCards.forEach(card => {
+        const header = card.querySelector('.accordion-header');
+        const body   = card.querySelector('.accordion-body');
+
+        header.addEventListener('click', () => {
+          const isOpen = card.classList.contains('open');
+
+          // Toggle this card
+          card.classList.toggle('open', !isOpen);
+          header.setAttribute('aria-expanded', String(!isOpen));
+
+          if (!isOpen) {
+            // Set max-height to the scroll height for a smooth open
+            body.style.maxHeight = body.scrollHeight + 'px';
+          } else {
+            // Snap back down
+            body.style.maxHeight = '0';
+          }
+        });
+
+        // Recalculate maxHeight on window resize if open (handles layout shifts)
+        window.addEventListener('resize', () => {
+          if (card.classList.contains('open')) {
+            body.style.maxHeight = body.scrollHeight + 'px';
+          }
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // Copy-to-clipboard for email button (with toast feedback)
+      // -----------------------------------------------------------------------
+      const toastEl     = document.getElementById('copy-toast');
+      const toastTextEl = document.getElementById('copy-toast-text');
+      let   toastTimer  = null;
+
+      function showToast(message) {
+        if (!toastEl) return;
+        toastTextEl.textContent = message;
+        toastEl.classList.add('is-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.remove('is-visible');
+        }, 2200);
+      }
+
+      // Fallback copy for older browsers or non-secure contexts (file:// etc.)
+      function legacyCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+        document.body.removeChild(ta);
+        return ok;
+      }
+
+      async function copyEmail(email) {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(email);
+            showToast('Email address copied');
+            return;
+          }
+        } catch (_) { /* fall through to legacy path */ }
+
+        if (legacyCopy(email)) {
+          showToast('Email address copied');
+        } else {
+          showToast('Copy failed — email: ' + email);
+        }
+      }
+
+      document.querySelectorAll('[data-copy-email]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const email = btn.getAttribute('data-copy-email');
+          if (email) copyEmail(email);
+        });
+      });
+
+    })();
+  </script>
+  <!-- Toast notification element (shown after copying email) -->
+  <div id="copy-toast" class="toast" role="status" aria-live="polite">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="copy-toast-text">Email address copied</span>
+  </div>
+
+</body>
+</html>
