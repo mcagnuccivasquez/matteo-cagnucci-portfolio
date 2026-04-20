@@ -622,11 +622,18 @@ EDUCATION (Section 5)
     }
     .timeline-bullets li::marker { color: var(--blue-mid); }
 
-    /* — Companies Grid — */
+    /* — Companies Grid —
+       Uses flexbox (not grid) so that when the last row has fewer cards than
+       columns, they automatically center — works at any viewport width. */
     .companies-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 16px;
+    }
+    .companies-grid > .company-card {
+      flex: 1 1 200px;
+      max-width: 260px;
     }
     .company-card {
       background: var(--bg-light);
@@ -804,7 +811,10 @@ EDUCATION (Section 5)
       .hero-band { padding: 24px 18px; }
       .container { padding: 0 16px; }
       .accordion-title { font-size: 0.95rem; }
-      .companies-grid { grid-template-columns: 1fr 1fr; }
+      .companies-grid > .company-card {
+        flex: 1 1 140px;
+        max-width: 180px;
+      }
     }
 
     /* =========================================================================
@@ -1109,21 +1119,6 @@ EDUCATION (Section 5)
                       </div>
                     </li>
 
-                    <!-- Vuelo Libre Colombia -->
-                    <li class="timeline-entry">
-                      <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
-                      <div class="timeline-body">
-                        <p class="timeline-title">Marketing Coordinator</p>
-                        <p class="timeline-company">Vuelo Libre Colombia (Advance Colombia) · Piedecuesta, Colombia</p>
-                        <p class="timeline-dates">Jan 2025 – Sep 2025</p>
-                        <ul class="timeline-bullets">
-                          <li>Supported marketing initiatives for a local adventure sports entrepreneurship, helping strengthen its digital presence and audience engagement.</li>
-                          <li>Managed social media content and contributed to the communication of the brand's activities, services, and overall image.</li>
-                          <li>Helped promote the business through consistent content execution, creative coordination, and audience-focused communication.</li>
-                        </ul>
-                      </div>
-                    </li>
-
                     <!-- Best English Institute -->
                     <li class="timeline-entry">
                       <div class="timeline-line"><div class="timeline-dot"></div><div class="timeline-connector"></div></div>
@@ -1221,13 +1216,6 @@ EDUCATION (Section 5)
                       <div class="company-logo" style="background: linear-gradient(135deg, #5CB3E8, #A7D8F5);" aria-hidden="true">AV</div>
                       <p class="company-name">AVIACOL</p>
                       <p class="company-desc">Aviation school — freelance video editing for social media campaigns.</p>
-                    </a>
-
-                    <!-- Vuelo Libre Colombia -->
-                    <a class="company-card" href="https://www.instagram.com/advance_colombia/" target="_blank" rel="noopener noreferrer">
-                      <div class="company-logo" style="background: linear-gradient(135deg, #A7D8F5, #2E86C1);" aria-hidden="true">VL</div>
-                      <p class="company-name">Vuelo Libre Colombia</p>
-                      <p class="company-desc">Adventure sports entrepreneurship — marketing coordination &amp; digital presence.</p>
                     </a>
 
                     <!-- Best English Institute -->
